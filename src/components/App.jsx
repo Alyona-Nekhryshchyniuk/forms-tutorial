@@ -1,26 +1,33 @@
 import './App.css';
 import React, { Component } from 'react';
 // import Header from "./Header/Header";
-// import Footer from "./Footer/Footer";
+import Footer from './Footer/Footer';
 import CheckboxForm from './CheckboxForm/CheckboxForm';
+import makesAPIrequests from './Footer/makesAPIrequests';
 // import Main from "./Main/Main";
 // import Photos from "./Photos/Photos";
 
 // import fruits from "./header.json";
 // import images from "./img.json";
-const INTERESTS = ['yoga', 'football', 'hokey', 'dancing'];
+const INTERESTS = ['yoga', 'FooterFormball', 'hokey', 'dancing'];
 
 class App extends Component {
-  // state = {
-  //   internalStateData: 0,
-  // };
+  state = {
+    formData: {},
+  };
 
-  // getFormData = (internalStateData) => {
-  //   console.log(internalStateData);
-  //   this.state = {
-  //     internalStateData: internalStateData,
-  //   };
-  // };
+  getFormData = async formData => {
+    try {
+      console.log(formData);
+      await makesAPIrequests(formData);
+
+      this.state = {
+        formData,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   render() {
     return (
@@ -31,7 +38,7 @@ class App extends Component {
         <Photos images={images} />
       </Main> */}
 
-        {/* <Footer data={this.getFormData} /> */}
+        <Footer onSubmit={this.getFormData} />
       </>
     );
   }

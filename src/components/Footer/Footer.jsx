@@ -1,187 +1,251 @@
-// import { nanoid } from "nanoid";
-// import React, { Component } from "react";
-// import { Foot } from "./Footer.styled";
-// import { Form } from "./Footer.styled";
-// import { Input } from "./Footer.styled";
-// import { Label } from "./Footer.styled";
+import { nanoid } from 'nanoid';
+import React, { Component } from 'react';
+import { FooterForm } from './FooterForm.styled';
+import { StyledForm } from './FooterForm.styled';
+import { Input } from './FooterForm.styled';
+import { Label } from './FooterForm.styled';
+import { Formik, ErrorMessage } from 'formik';
+import * as yup from 'yup';
 
-// class Footer extends Component {
-//   state = {
-//     surname: "",
-//     password: "",
-//     salary: "",
-//     subscribe: false,
-//     under18: false,
-//     knowledge: [],
-//   };
-//   reset = () => {
-//     this.setState({
-//       surname: "",
-//       password: "",
-//       salary: false,
-//       subscribe: false,
-//       under18: false,
-//     });
-//   };
+let schema = yup.object().shape({
+  name: yup.string().required(),
+  password: yup.number().required(),
+});
 
-//   nameGet = (e) => {
-//     this.setState({ [e.target.name]: e.target.value });
-//   };
+const STATE = {
+  surname: '',
+  password: '',
+  salary: '',
+  subscribe: false,
+  under18: false,
+  satisfied: 0,
+  knowledge: [],
+  additionalInfo: '',
+};
 
-//   checkboxHandle = (e) => {
-//     this.setState((prevState) => {
-//       prevState.knowledge.push(e.target.value);
-//     });
-//   };
+class Footer extends Component {
+  //   state = {
+  //     ...STATE,
+  //   };
+  reset = () => {
+    this.setState({
+      ...STATE,
+    });
+  };
 
-//   handleSubmit = (e) => {
-//     e.preventDefault();
+  //   nameGet = e => {
+  //     this.setState({ [e.target.name]: e.target.value });
+  //   };
 
-//     this.props.data(this.state);
-//     this.reset();
-//   };
+  getCheckboxValue = e => {
+    this.setState({ [e.target.name]: !this.state[e.target.name] });
+  };
 
-//   render() {
-//     let fo = [
-//       "f",
-//       "g",
-//       "h",
-//       "d",
-//       "s",
-//       "w",
-//       "a",
-//       "k",
-//       "o",
-//       "e",
-//       "r",
-//       "t",
-//       "y",
-//     ].map((el) => (el = nanoid()));
+  getMultipleCheckboxValue = e => {
+    let value = e.target.value;
+    let stateArray = this.state.knowledge;
 
-//     return (
-//       <Foot>
-//         <Form primary onSubmit={this.handleSubmit}>
-//           <Label htmlFor={fo[0]}> Name</Label>
-//           <Input
-//             type="text"
-//             name="surname"
-//             id={fo[0]}
-//             onChange={this.nameGet}
-//             value={this.state.surname}
-//           />
-//           <Label htmlFor={fo[1]}> Parol</Label>
-//           <Input
-//             type="password"
-//             name="password"
-//             id={fo[1]}
-//             onChange={this.nameGet}
-//             value={this.state.password}
-//           />
-//           <button type="submit">Submit</button>
-//         </Form>
+    let addIfLackExcludeIfHas =
+      !this.state.knowledge.join(' ').includes(value) && e.target.checked
+        ? [...stateArray, value]
+        : [...stateArray.filter(el => el !== value)];
 
-//         <Form onSubmit={this.handleSubmit}>
-//           <Label htmlFor={fo[2]}>Do you want to subscribe?</Label>
-//           <Input
-//             name="subscribe"
-//             type="checkbox"
-//             id={fo[2]}
-//             onChange={this.nameGet}
-//             value={this.state.subscribe}
-//           />
-//           <Label htmlFor={fo[3]}>Under 18? </Label>
-//           <Input
-//             type="checkbox"
-//             name="under18"
-//             id={fo[3]}
-//             onChange={this.nameGet}
-//             value={this.state.under18}
-//           />
-//           <button type="submit">Submit</button>
-//         </Form>
+    this.setState({
+      [e.target.name]: addIfLackExcludeIfHas,
+    });
+  };
 
-//         {/* <Form primary onSubmit={this.handleSubmit}>
-//           <Label htmlFor={fo[4]}> </Label>
-//           <Input type="search" name="joy" id={fo[4]} onChange={this.nameGet} />
-//           <Label htmlFor={fo[5]}>How much are you satisfied?</Label>
-//           <Input type="range" id={fo[5]} onChange={this.nameGet} />
+  //   handleSubmit = e => {
+  //     e.preventDefault();
 
-//           <p>Salary</p>
-//           <Label htmlFor={fo[6]}>200$</Label>
-//           <Input
-//             type="radio"
-//             id={fo[6]}
-//             name="salary"
-//             onChange={this.nameGet}
-//             checked={this.state.salary === "200$"}
-//             value="200$"
-//           />
-//           <Label htmlFor={fo[7]}>400$</Label>
-//           <Input
-//             type="radio"
-//             id={fo[7]}
-//             name="salary"
-//             onChange={this.nameGet}
-//             value="400$"
-//             // value={this.state.salary}
-//             checked={this.state.salary === "400$"}
-//           />
-//           <Label htmlFor={fo[8]}>800$</Label>
-//           <Input
-//             type="radio"
-//             id={fo[8]}
-//             name="salary"
-//             onChange={this.nameGet}
-//             value="800$"
-//             // value={this.state.salary}
-//             checked={this.state.salary === "800$"}
-//           />
-//           <textarea></textarea>
-//           <button type="submit">Submit</button>
-//         </Form> */}
+  //     this.props.onSubmit(this.state);
+  //     this.reset();
+  //   };
 
-//         <Form primary onSubmit={this.handleSubmit}>
-//           {/* <Label htmlFor={fo[9]}> </Label>
-//           <Input type="search" name="joy" id={fo[9]} onChange={this.nameGet} />
-//           <Label htmlFor={fo[10]}>How much are you satisfied?</Label>
-//           <Input type="range" id={fo[10]} onChange={this.nameGet} /> */}
+  render() {
+    let newId = [
+      'f',
+      'g',
+      'h',
+      'd',
+      's',
+      'w',
+      'a',
+      'k',
+      'o',
+      'e',
+      'r',
+      't',
+      'y',
+    ].map(el => (el = nanoid()));
 
-//           <p>Knowledge</p>
-//           <Label htmlFor={fo[11]}>History</Label>
-//           <Input
-//             type="checkbox"
-//             id={fo[11]}
-//             name="knowledge"
-//             onChange={this.checkboxHandle}
-//             // checked={this.state.knowledge === "History"}
-//             value="History"
-//           />
-//           <Label htmlFor={fo[12]}>Math</Label>
-//           <Input
-//             type="checkbox"
-//             id={fo[12]}
-//             name="knowledge"
-//             onChange={this.checkboxHandle}
-//             value="Math"
+    return (
+      <FooterForm>
+        <Formik
+          validationSchema={schema}
+          initialValues={{
+            surname: '',
+            password: '',
+            salary: '',
+            subscribe: false,
+            under18: false,
+            satisfied: 0,
+            knowledge: [],
+            additionalInfo: '',
+          }}
+          async
+          onSubmit={(values, actions) => {
+            this.props.onSubmit(values);
+            actions.resetForm();
+          }}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            /* and other goodies */
+          }) => (
+            <StyledForm>
+              <Label htmlFor={newId[0]} primary>
+                Name
+              </Label>
+              <Input
+                type="text"
+                name="surname"
+                id={newId[0]}
+                onChange={handleChange}
+                //   value={this.state.surname}
+                value={values.surname}
+              />
+              <ErrorMessage name="surname" />
+              <Label htmlFor={newId[1]} primary>
+                {' '}
+                Password
+              </Label>
+              <Input
+                type="password"
+                name="password"
+                id={newId[1]}
+                onChange={handleChange}
+                //   value={this.state.password}
+                value={values.password}
+              />
+              <ErrorMessage name="password" />
+              <button type="submit">Submit</button>
+            </StyledForm>
+          )}
+        </Formik>
+        {/* 
+        <Form onSubmit={this.handleSubmit}>
+          <Label htmlFor={newId[2]}>Do you want to subscribe?</Label>
+          <Input
+            name="subscribe"
+            type="checkbox"
+            id={newId[2]}
+            onChange={this.getCheckboxValue}
+            value={this.state.subscribe}
+          />
+          <Label htmlFor={newId[3]}>Under 18? </Label>
+          <Input
+            type="checkbox"
+            name="under18"
+            id={newId[3]}
+            onChange={this.getCheckboxValue}
+            value={this.state.under18}
+          />
+          <button type="submit">Submit</button>
+        </Form>
 
-//             // checked={this.state.knowledge === "Math"}
-//           />
-//           <Label htmlFor={fo[13]}>IT</Label>
-//           <Input
-//             type="checkbox"
-//             id={fo[13]}
-//             name="knowledge"
-//             onChange={this.checkboxHandle}
-//             value="IT"
-//             // value={this.state.salary}
-//             // checked={this.state.knowledge === "IT"}
-//           />
+        <Form primary onSubmit={this.handleSubmit}>
+          <Label htmlFor={newId[5]}>How much are you satisfied?</Label>
+          <Input
+            type="range"
+            id={newId[5]}
+            onChange={this.nameGet}
+            name="satisfied"
+            value={this.state.satisfied}
+          />
 
-//           <button type="submit">Submit</button>
-//         </Form>
-//       </Foot>
-//     );
-//   }
-// }
+          <p>highly-anticipated salary</p>
+          <Label htmlFor={newId[6]}>200$</Label>
+          <Input
+            type="radio"
+            id={newId[6]}
+            name="salary"
+            onChange={this.nameGet}
+            value="200$"
+          />
+          <Label htmlFor={newId[7]}>400$</Label>
+          <Input
+            type="radio"
+            id={newId[7]}
+            name="salary"
+            onChange={this.nameGet}
+            value="400$"
+            checked={this.state.salary === '400$'}
+          />
+          <Label htmlFor={newId[8]}>800$</Label>
+          <Input
+            type="radio"
+            id={newId[8]}
+            name="salary"
+            onChange={this.nameGet}
+            value="800$"
+            checked={this.state.salary === '800$'}
+          />
+          <textarea
+            onChange={this.nameGet}
+            name="additionalInfo"
+            style={{ marginBottom: 30 }}
+            placeholder="Additional information"
+            rows="8"
+            cols="12"
+            value={this.state.additionalInfo}
+          ></textarea>
+          <button type="submit">Submit</button>
+        </Form>
 
-// export default Footer;
+        <Form primary onSubmit={this.handleSubmit}>
+          <p>High-priority Knowledge:</p>
+          <Label htmlFor={newId[11]}>History</Label>
+          <Input
+            type="checkbox"
+            id={newId[11]}
+            name="knowledge"
+            onChange={this.getMultipleCheckboxValue}
+            // checked={this.state.knowledge === "History"}
+            value="history"
+          />
+          <Label htmlFor={newId[12]}>Math</Label>
+          <Input
+            type="checkbox"
+            id={newId[12]}
+            name="knowledge"
+            onChange={this.getMultipleCheckboxValue}
+            value="math"
+
+            // checked={this.state.knowledge === "Math"}
+          />
+          <Label htmlFor={newId[13]}>IT</Label>
+          <Input
+            type="checkbox"
+            id={newId[13]}
+            name="knowledge"
+            onChange={this.getMultipleCheckboxValue}
+            value="IT"
+            // value={this.state.salary}
+            // checked={this.state.knowledge === "IT"}
+          />
+
+          <button type="submit">Submit</button>
+        </Form> */}
+      </FooterForm>
+    );
+  }
+}
+
+export default Footer;
